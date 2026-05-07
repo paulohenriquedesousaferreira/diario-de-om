@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ops-system-v1';
+const CACHE_NAME = 'Sistema Diário';
 const assets = ['index.html', 'manifest.json'];
 
 self.addEventListener('install', (e) => {
