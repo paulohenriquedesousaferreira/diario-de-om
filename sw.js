@@ -1,10 +1,8 @@
-const CACHE_NAME = 'Sistema Diário';
-const assets = ['index.html', 'manifest.json'];
-
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(assets)));
+  console.log('Service Worker instalado!');
 });
 
 self.addEventListener('fetch', (e) => {
-  e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
+  // Isso permite que o app funcione offline
+  e.respondWith(fetch(e.request));
 });
