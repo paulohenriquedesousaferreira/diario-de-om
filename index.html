@@ -18,6 +18,15 @@
         .section-title::after { content: ""; flex: 1; height: 1px; background: rgba(56,189,248,0.2); }
         label { font-size: 0.8rem; color: #94a3b8; display: block; margin-top: 10px; }
         input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 16px; box-sizing: border-box; }
+        
+        /* Estilo especial para o campo de arquivo para parecer um botão */
+        input[type="file"] {
+            padding: 10px;
+            background: #1e293b;
+            border: 1px dashed var(--accent);
+            cursor: pointer;
+        }
+
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .doc-group { background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--primary); }
         .input-row { display: flex; gap: 5px; margin-bottom: 5px; }
@@ -55,6 +64,11 @@
                 <div class="doc-group" id="group-SI"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-SI', 'SI')">+ SI</button></div>
                 <div class="doc-group" id="group-PTP"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-PTP', 'PTP')">+ PTP</button></div>
             </div>
+            <div class="grid-2">
+                <div class="doc-group" id="group-OC"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OC', 'OC')">+ OC</button></div>
+                <div class="doc-group" id="group-OSE"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OSE', 'OSE')">+ OSE</button></div>
+            </div>
+
 
             <div class="status-box">
                 <label>Status:</label><select id="status" onchange="toggleParcial()"><option value="CONCLUÍDO">✅ CONCLUÍDO</option><option value="PARCIAL">⚠️ PARCIAL</option></select>
@@ -63,8 +77,10 @@
 
             <label>Serviços:</label><textarea id="servicos" rows="3"></textarea>
 
-            <label>Fotos/Vídeos:</label>
+            <!-- CAMPO DE MÍDIA AJUSTADO PARA MOBILE -->
+            <label>Anexar Fotos ou Vídeos:</label>
             <input type="file" id="midia" multiple accept="image/*,video/*">
+            <small style="font-size: 10px; color: #64748b; display: block; margin-top: 5px;">* Ao clicar, escolha 'Câmera' para tirar foto agora ou 'Arquivos' para galeria.</small>
 
             <button class="btn-send" onclick="gerarEEnviar()">🚀 TRANSMITIR PARA WHATSAPP</button>
         </div>
@@ -110,7 +126,6 @@
         const content = await zip.generateAsync({type: "blob"});
         const file = new File([content], `Relatorio_${d('equipe')}.zip`, {type: "application/zip"});
 
-        // Tenta compartilhar. Se falhar, faz o download como backup.
         try {
             if (navigator.share && navigator.canShare({ files: [file] })) {
                 await navigator.share({ files: [file], title: 'Diário', text: relatorio });
