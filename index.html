@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ops System - Diário de Obras</title>
+    <title>Ops System - Brasa do Chefe</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0b0f1a">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    
     <style>
         :root { --bg: #0b0f1a; --card: #161b2a; --primary: #fbbf24; --secondary: #10b981; --accent: #38bdf8; --text: #e2e8f0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 10px; margin: 0; }
-        .container { width: 100%; max-width: 450px; margin: auto; background: var(--card); border-radius: 20px; border: 1px solid #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden; }
+        .container { max-width: 450px; margin: auto; background: var(--card); border-radius: 20px; border: 1px solid #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden; }
         .header { background: #1a202e; padding: 20px; text-align: center; border-bottom: 3px solid var(--primary); }
         .header h1 { color: var(--primary); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
         .content { padding: 15px; }
@@ -30,57 +29,46 @@
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header"><h1>OPERATIONS DASHBOARD</h1></div>
+        <div class="content">
+            <div class="grid-2">
+                <div><label>Cidade:</label><input type="text" id="cidade" value="Águas Lindas"></div>
+                <div><label>Data:</label><input type="date" id="data"></div>
+            </div>
 
-<div class="container">
-    <div class="header"><h1>OPERATIONS DASHBOARD</h1></div>
-    <div class="content">
-        <div class="section-title">Localização & Data</div>
-        <div class="grid-2">
-            <div><label>Cidade:</label><input type="text" id="cidade" value="Águas Lindas"></div>
-            <div><label>Data:</label><input type="date" id="data"></div>
+            <div class="section-title">Equipe & Projeto</div>
+            <div class="grid-2">
+                <div><label>Equipe:</label><select id="equipe"><option value="">Selecione</option><option>AGLO001M</option><option>AGLO002M</option><option>AGLO003M</option><option>AGLO004M</option><option>AGLO005M</option><option>AGLO006M</option><option>AGLV001M</option><option>AGLB001M</option><option>AGLV002M</option><option>AGLV003M</option><option>AGLP001M</option></select></div>
+                <div><label>Nº Projeto:</label><input type="text" id="projeto"></div>
+            </div>
+
+            <label>Encarregado:</label>
+            <select id="encarregado"><option value="">Selecione</option><option>MOURES SANTANA GONÇALVES DE ABREU</option><option>JOSE LUIZ DE MELO SOUZA</option><option>JOÃO PAULO TEXEIRA NASCIMENTO</option><option>LAZARO JOSE DO CARMO NASCIMENTO</option><option>MOISES VANIR LEITE DA SILVA</option><option>JOÃO BATISTA RODRIGUES DA SILVA</option><option>JOSUEL AFONSO ALVES</option><option>ELIAVAM PATRICIO</option><option>JOÃO ALVES NOGUEIRA</option><option>JOSE CARVALHO SOUZA</option><option>CLAUDEMIR FRANCISCO DOS SANTOS</option></select>
+
+            <div class="doc-group" id="group-integrantes"><label>Integrantes:</label><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-integrantes', 'Integrante')">+ ADD INTEGRANTE</button></div>
+
+            <div class="section-title">Documentação Técnica</div>
+            <label>Tensão:</label><select id="tensao"><option>BT</option><option>13.8KV</option><option>34.5KV</option></select>
+
+            <div class="grid-2">
+                <div class="doc-group" id="group-SI"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-SI', 'SI')">+ SI</button></div>
+                <div class="doc-group" id="group-PTP"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-PTP', 'PTP')">+ PTP</button></div>
+            </div>
+
+            <div class="status-box">
+                <label>Status:</label><select id="status" onchange="toggleParcial()"><option value="CONCLUÍDO">✅ CONCLUÍDO</option><option value="PARCIAL">⚠️ PARCIAL</option></select>
+                <div id="descParcial" class="hidden"><label>Pendência:</label><textarea id="obsParcial" rows="2"></textarea></div>
+            </div>
+
+            <label>Serviços:</label><textarea id="servicos" rows="3"></textarea>
+
+            <label>Fotos/Vídeos:</label>
+            <input type="file" id="midia" multiple accept="image/*,video/*">
+
+            <button class="btn-send" onclick="gerarEEnviar()">🚀 TRANSMITIR PARA WHATSAPP</button>
         </div>
-
-        <div class="section-title">Equipe & Projeto</div>
-        <div class="grid-2">
-            <div><label>Equipe:</label><select id="equipe">
-                <option value="">Selecione</option><option>AGLO001M</option><option>AGLO002M</option><option>AGLO003M</option><option>AGLO004M</option><option>AGLO005M</option><option>AGLO006M</option><option>AGLV001M</option><option>AGLB001M</option><option>AGLV002M</option><option>AGLV003M</option><option>AGLP001M</option>
-            </select></div>
-            <div><label>Nº Projeto:</label><input type="text" id="projeto" placeholder="0000"></div>
-        </div>
-
-        <label>Encarregado:</label>
-        <select id="encarregado">
-            <option value="">Selecione</option><option>MOURES SANTANA GONÇALVES DE ABREU</option><option>JOSE LUIZ DE MELO SOUZA</option><option>JOÃO PAULO TEXEIRA NASCIMENTO</option><option>LAZARO JOSE DO CARMO NASCIMENTO</option><option>MOISES VANIR LEITE DA SILVA</option><option>JOÃO BATISTA RODRIGUES DA SILVA</option><option>JOSUEL AFONSO ALVES</option><option>ELIAVAM PATRICIO</option><option>JOÃO ALVES NOGUEIRA</option><option>JOSE CARVALHO SOUZA</option><option>CLAUDEMIR FRANCISCO DOS SANTOS</option>
-        </select>
-
-        <div class="doc-group" id="group-integrantes" style="border-left-color: var(--accent);"><label>Integrantes:</label><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-integrantes', 'Integrante')">+ ADD INTEGRANTE</button></div>
-
-        <div class="section-title">Documentação Técnica</div>
-        <label>Classe de Tensão:</label><select id="tensao"><option>BT</option><option>13.8KV</option><option>34.5KV</option></select>
-
-        <div class="grid-2">
-            <div class="doc-group" id="group-SI"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-SI', 'SI')">+ SI</button></div>
-            <div class="doc-group" id="group-PTP"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-PTP', 'PTP')">+ PTP</button></div>
-        </div>
-        <div class="grid-2">
-            <div class="doc-group" id="group-OC"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OC', 'OC')">+ OC</button></div>
-            <div class="doc-group" id="group-OSE"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OSE', 'OSE')">+ OSE</button></div>
-        </div>
-
-        <div class="section-title">Status</div>
-        <div class="status-box">
-            <select id="status" onchange="toggleParcial()"><option value="CONCLUÍDO">✅ CONCLUÍDO</option><option value="PARCIAL">⚠️ PARCIAL / PENDENTE</option></select>
-            <div id="descParcial" class="hidden"><label>Pendências:</label><textarea id="obsParcial" rows="2"></textarea></div>
-        </div>
-
-        <label style="margin-top:20px">Serviços:</label><textarea id="servicos" rows="3"></textarea>
-
-        <label>Evidências (Câmera ou Galeria):</label>
-        <input type="file" id="midia" multiple accept="image/*,video/*">
-
-        <button class="btn-send" onclick="gerarEEnviar()">🚀 TRANSMITIR PARA WHATSAPP</button>
     </div>
-</div>
 
 <script>
     document.getElementById('data').valueAsDate = new Date();
@@ -110,9 +98,9 @@
             if(i.value.trim()) extras += `${i.dataset.type === 'Integrante' ? '👥' : '📄'} - ${i.dataset.type}: ${i.value}\n`;
         });
 
-        let relatorio = `📂 *DIÁRIO DE OBRAS E MANUTENÇÃO*\n\n📍 - Cidade: ${d('cidade')}\n📅 - Data: ${d('data')}\n👷 - Equipe: ${d('equipe')}\n⚒️ - Enc: ${d('encarregado')}\n${extras}\n📁 - Projeto: ${d('projeto')}\n⚡ - Tensão: ${d('tensao')}\n⚙️ - Serviços: ${d('servicos')}\n\n📊 - Status: ${d('status')}\n`;
-        if(d('status') === 'PARCIAL') relatorio += `🚧 - Pendências: ${d('obsParcial')}\n`;
-        relatorio += `\n🔍 - Arquivos: ${arquivos.length} no ZIP.`;
+        let relatorio = `📂 *DIÁRIO DE OBRAS*\n\n📍 - Cidade: ${d('cidade')}\n📅 - Data: ${d('data')}\n👷 - Equipe: ${d('equipe')}\n⚒️ - Enc: ${d('encarregado')}\n${extras}\n📁 - Proj: ${d('projeto')}\n⚡ - Tensão: ${d('tensao')}\n⚙️ - Serviços: ${d('servicos')}\n\n📊 - Status: ${d('status')}\n`;
+        if(d('status') === 'PARCIAL') relatorio += `🚧 - Pendência: ${d('obsParcial')}\n`;
+        relatorio += `\n🔍 - Arquivos no ZIP: ${arquivos.length}`;
 
         zip.file("RELATORIO.txt", relatorio.replace(/\*/g, ''));
         for (let i = 0; i < arquivos.length; i++) {
@@ -122,25 +110,24 @@
         const content = await zip.generateAsync({type: "blob"});
         const file = new File([content], `Relatorio_${d('equipe')}.zip`, {type: "application/zip"});
 
-        // VERIFICAÇÃO DE COMPARTILHAMENTO
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({ files: [file], title: 'Relatório', text: relatorio });
-            } catch (err) {
-                alert("Erro ao enviar. Verifique se o site está em HTTPS.");
+        // Tenta compartilhar. Se falhar, faz o download como backup.
+        try {
+            if (navigator.share && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], title: 'Diário', text: relatorio });
+            } else {
+                throw new Error();
             }
-        } else {
-            // Se não puder compartilhar (ex: HTTP), ele apenas baixa o arquivo
+        } catch (err) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(content);
             link.download = `Relatorio_${d('equipe')}.zip`;
             link.click();
-            alert("ZIP baixado! Como este site não é HTTPS ou seu celular bloqueou o envio direto, anexe o arquivo no WhatsApp manualmente.");
+            alert("ZIP baixado! Como o navegador bloqueou o envio direto, anexe o arquivo no WhatsApp manualmente.");
         }
     }
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
+        navigator.serviceWorker.register('sw.js').catch(err => console.log("SW Erro", err));
     }
 </script>
 </body>
