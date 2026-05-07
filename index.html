@@ -2,144 +2,61 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ops System - Diário de Obras</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0b0f1a">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <style>
-        :root {
-            --bg: #0b0f1a; --card: #161b2a; --primary: #fbbf24;
-            --secondary: #10b981; --accent: #38bdf8; --text: #e2e8f0;
-        }
-        
-        body { 
-            font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); 
-            padding: 10px; margin: 0; display: flex; justify-content: center;
-        }
-
-        .container { 
-            width: 100%; max-width: 450px; background: var(--card); 
-            border-radius: 20px; border: 1px solid #2d3748; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden;
-        }
-
-        .header { 
-            background: #1a202e; padding: 20px; text-align: center; 
-            border-bottom: 3px solid var(--primary); 
-        }
-
-        .header h1 { 
-            color: var(--primary); font-size: 1.1rem; margin: 0; 
-            text-transform: uppercase; letter-spacing: 2px; 
-        }
-
+        :root { --bg: #0b0f1a; --card: #161b2a; --primary: #fbbf24; --secondary: #10b981; --accent: #38bdf8; --text: #e2e8f0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 10px; margin: 0; }
+        .container { width: 100%; max-width: 450px; margin: auto; background: var(--card); border-radius: 20px; border: 1px solid #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden; }
+        .header { background: #1a202e; padding: 20px; text-align: center; border-bottom: 3px solid var(--primary); }
+        .header h1 { color: var(--primary); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
         .content { padding: 15px; }
-
-        .section-title { 
-            font-size: 0.7rem; font-weight: 800; color: var(--accent); 
-            text-transform: uppercase; margin: 25px 0 10px 0; 
-            letter-spacing: 1px; display: flex; align-items: center; gap: 8px; 
-        }
-
-        .section-title::after { 
-            content: ""; flex: 1; height: 1px; background: rgba(56,189,248,0.2); 
-        }
-        
+        .section-title { font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 25px 0 10px 0; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: rgba(56,189,248,0.2); }
         label { font-size: 0.8rem; color: #94a3b8; display: block; margin-top: 10px; }
-
-        input, select, textarea { 
-            width: 100%; padding: 12px; margin-top: 5px; background: #0f172a; 
-            border: 1px solid #334155; border-radius: 10px; color: white; 
-            font-size: 0.95rem; box-sizing: border-box; 
-        }
-
-        input:focus, select:focus { border-color: var(--accent); outline: none; }
-
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 16px; box-sizing: border-box; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        
-        .doc-group { 
-            background: rgba(15, 23, 42, 0.4); padding: 10px; 
-            border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--primary); 
-        }
-
+        .doc-group { background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--primary); }
         .input-row { display: flex; gap: 5px; margin-bottom: 5px; }
-
-        .btn-add { 
-            background: transparent; color: var(--accent); border: 1px dashed var(--accent); 
-            padding: 8px; border-radius: 8px; width: 100%; cursor: pointer; 
-            font-size: 0.75rem; font-weight: bold; margin-top: 5px;
-        }
-
-        .btn-remove { 
-            background: #ef4444; color: white; border: none; 
-            border-radius: 8px; width: 40px; cursor: pointer; 
-        }
-        
-        .status-box { 
-            background: #1e293b; padding: 15px; border-radius: 12px; 
-            margin-top: 15px; border: 1px solid #334155; 
-        }
-
+        .btn-add { background: transparent; color: var(--accent); border: 1px dashed var(--accent); padding: 8px; border-radius: 8px; width: 100%; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+        .btn-remove { background: #ef4444; color: white; border: none; border-radius: 8px; width: 40px; cursor: pointer; }
+        .status-box { background: #1e293b; padding: 15px; border-radius: 12px; margin-top: 15px; border: 1px solid #334155; }
         .hidden { display: none; }
-        
-        .btn-send { 
-            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%); 
-            color: white; border: none; padding: 20px; width: 100%; border-radius: 15px; 
-            font-size: 1rem; font-weight: 800; margin-top: 25px; cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); text-transform: uppercase;
-        }
+        .btn-send { background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%); color: white; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 1rem; font-weight: 800; margin-top: 25px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header"><h1>Diario de Obra e Manutenção</h1></div>
+    <div class="header"><h1>OPERATIONS DASHBOARD</h1></div>
     <div class="content">
-        
         <div class="section-title">Localização & Data</div>
         <div class="grid-2">
-            <div><label>Cidade:</label><input type="text" id="cidade" placeholder="Ex: Águas Lindas"></div>
+            <div><label>Cidade:</label><input type="text" id="cidade" value="Águas Lindas"></div>
             <div><label>Data:</label><input type="date" id="data"></div>
         </div>
 
         <div class="section-title">Equipe & Projeto</div>
         <div class="grid-2">
-            <div>
-                <label>Equipe:</label>
-                <select id="equipe">
-                    <option value="">Selecione</option>
-                    <option>AGLO001M</option><option>AGLO002M</option><option>AGLO003M</option>
-                    <option>AGLO004M</option><option>AGLO005M</option><option>AGLO006M</option>
-                    <option>AGLV001M</option><option>AGLB001M</option><option>AGLV002M</option>
-                    <option>AGLV003M</option><option>AGLP001M</option>
-                </select>
-            </div>
+            <div><label>Equipe:</label><select id="equipe">
+                <option value="">Selecione</option><option>AGLO001M</option><option>AGLO002M</option><option>AGLO003M</option><option>AGLO004M</option><option>AGLO005M</option><option>AGLO006M</option><option>AGLV001M</option><option>AGLB001M</option><option>AGLV002M</option><option>AGLV003M</option><option>AGLP001M</option>
+            </select></div>
             <div><label>Nº Projeto:</label><input type="text" id="projeto" placeholder="0000"></div>
         </div>
 
         <label>Encarregado:</label>
         <select id="encarregado">
-            <option value="">Selecione</option>
-            <option>MOURES SANTANA GONÇALVES DE ABREU</option><option>JOSE LUIZ DE MELO SOUZA</option>
-            <option>JOÃO PAULO TEXEIRA NASCIMENTO</option><option>LAZARO JOSE DO CARMO NASCIMENTO</option>
-            <option>MOISES VANIR LEITE DA SILVA</option><option>JOÃO BATISTA RODRIGUES DA SILVA</option>
-            <option>JOSUEL AFONSO ALVES</option><option>ELIAVAM PATRICIO</option>
-            <option>JOÃO ALVES NOGUEIRA</option><option>JOSE CARVALHO SOUZA</option>
-            <option>CLAUDEMIR FRANCISCO DOS SANTOS</option>
+            <option value="">Selecione</option><option>MOURES SANTANA GONÇALVES DE ABREU</option><option>JOSE LUIZ DE MELO SOUZA</option><option>JOÃO PAULO TEXEIRA NASCIMENTO</option><option>LAZARO JOSE DO CARMO NASCIMENTO</option><option>MOISES VANIR LEITE DA SILVA</option><option>JOÃO BATISTA RODRIGUES DA SILVA</option><option>JOSUEL AFONSO ALVES</option><option>ELIAVAM PATRICIO</option><option>JOÃO ALVES NOGUEIRA</option><option>JOSE CARVALHO SOUZA</option><option>CLAUDEMIR FRANCISCO DOS SANTOS</option>
         </select>
 
-        <div class="doc-group" id="group-integrantes" style="border-left-color: var(--accent);">
-            <label>Integrantes da Equipe:</label>
-            <div class="container-inputs"></div>
-            <button class="btn-add" onclick="addInput('group-integrantes', 'Integrante')">+ ADD INTEGRANTE</button>
-        </div>
+        <div class="doc-group" id="group-integrantes" style="border-left-color: var(--accent);"><label>Integrantes:</label><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-integrantes', 'Integrante')">+ ADD INTEGRANTE</button></div>
 
         <div class="section-title">Documentação Técnica</div>
-        <label>Classe de Tensão:</label>
-        <select id="tensao"><option>BT</option><option>13.8KV</option><option>34.5KV</option></select>
+        <label>Classe de Tensão:</label><select id="tensao"><option>BT</option><option>13.8KV</option><option>34.5KV</option></select>
 
         <div class="grid-2">
             <div class="doc-group" id="group-SI"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-SI', 'SI')">+ SI</button></div>
@@ -150,130 +67,81 @@
             <div class="doc-group" id="group-OSE"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OSE', 'OSE')">+ OSE</button></div>
         </div>
 
-        <div class="section-title">Status da Atividade</div>
+        <div class="section-title">Status</div>
         <div class="status-box">
-            <select id="status" onchange="toggleParcial()">
-                <option value="CONCLUÍDO">✅ CONCLUÍDO</option>
-                <option value="PARCIAL">⚠️ PARCIAL / PENDENTE</option>
-            </select>
-            <div id="descParcial" class="hidden">
-                <label>Motivo da Pendência:</label>
-                <textarea id="obsParcial" rows="2" placeholder="Descreva o que faltou..."></textarea>
-            </div>
+            <select id="status" onchange="toggleParcial()"><option value="CONCLUÍDO">✅ CONCLUÍDO</option><option value="PARCIAL">⚠️ PARCIAL / PENDENTE</option></select>
+            <div id="descParcial" class="hidden"><label>Pendências:</label><textarea id="obsParcial" rows="2"></textarea></div>
         </div>
 
-        <label style="margin-top:20px">Relatório de Serviços:</label>
-        <textarea id="servicos" rows="3" placeholder="Descreva as atividades executadas..."></textarea>
+        <label style="margin-top:20px">Serviços:</label><textarea id="servicos" rows="3"></textarea>
 
-        <label>Fotos/Vídeos (Evidências):</label>
-        <input type="file" id="midia" multiple accept="image/*,video/*" capture="environment">
+        <label>Evidências (Câmera ou Galeria):</label>
+        <input type="file" id="midia" multiple accept="image/*,video/*">
 
         <button class="btn-send" onclick="gerarEEnviar()">🚀 TRANSMITIR PARA WHATSAPP</button>
     </div>
 </div>
 
 <script>
-    // Inicializa a data de hoje
     document.getElementById('data').valueAsDate = new Date();
 
-    // Função para adicionar campos dinâmicos (Integrantes, SI, PTP, etc)
     function addInput(groupId, label) {
         const container = document.querySelector(`#${groupId} .container-inputs`);
         const div = document.createElement('div');
         div.className = 'input-row';
-        div.innerHTML = `
-            <input type="text" class="doc-input" data-type="${label}" placeholder="Nº ${label}">
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-        `;
+        div.innerHTML = `<input type="text" class="doc-input" data-type="${label}" placeholder="${label}"><button class="btn-remove" onclick="this.parentElement.remove()">X</button>`;
         container.appendChild(div);
     }
 
-    // Gerencia a exibição do campo de pendência
     function toggleParcial() {
         const status = document.getElementById('status').value;
         document.getElementById('descParcial').className = status === 'PARCIAL' ? '' : 'hidden';
     }
 
-    // Função Principal: Gera o ZIP e envia para o WhatsApp
     async function gerarEEnviar() {
         const zip = new JSZip();
         const d = (id) => document.getElementById(id).value;
         const arquivos = document.getElementById('midia').files;
 
-        if (!d('equipe') || !d('encarregado')) {
-            alert("⚠️ Erro: Informe a Equipe e o Encarregado.");
-            return;
-        }
+        if (!d('equipe') || !d('encarregado')) { alert("Preencha Equipe e Encarregado!"); return; }
 
-        // Coleta docs e integrantes dinâmicos
-        let listagemAdicional = "";
+        let extras = "";
         document.querySelectorAll('.doc-input').forEach(i => {
-            if(i.value.trim()) {
-                const icon = i.dataset.type === 'Integrante' ? '👥' : '📄';
-                listagemAdicional += `${icon} - ${i.dataset.type}: ${i.value}\n`;
-            }
+            if(i.value.trim()) extras += `${i.dataset.type === 'Integrante' ? '👥' : '📄'} - ${i.dataset.type}: ${i.value}\n`;
         });
 
-        // Formata o texto final para o WhatsApp (Baseado na sua imagem)
-        let relatorio = `📂 *DIÁRIO DE OBRAS E MANUTENÇÃO*\n\n`;
-        relatorio += `📍 - Cidade: ${d('cidade')}\n`;
-        relatorio += `📅 - Data: ${d('data')}\n`;
-        relatorio += `👷 - Equipe: ${d('equipe')}\n`;
-        relatorio += `⚒️ - Enc: ${d('encarregado')}\n`;
-        relatorio += listagemAdicional;
-        relatorio += `\n📁 - Projeto: ${d('projeto')}\n`;
-        relatorio += `⚡ - Tensão: ${d('tensao')}\n`;
-        relatorio += `⚙️ - Serviços Executados: ${d('servicos')}\n\n`;
-        relatorio += `📊 - Status da Atividade: ${d('status')}\n`;
-        
-        if(d('status') === 'PARCIAL') {
-            relatorio += `🚧 - Pendências: ${d('obsParcial')}\n`;
-        }
-        
-        relatorio += `\n🔍 - Observações: ${arquivos.length} arquivos enviados no ZIP.`;
+        let relatorio = `📂 *DIÁRIO DE OBRAS E MANUTENÇÃO*\n\n📍 - Cidade: ${d('cidade')}\n📅 - Data: ${d('data')}\n👷 - Equipe: ${d('equipe')}\n⚒️ - Enc: ${d('encarregado')}\n${extras}\n📁 - Projeto: ${d('projeto')}\n⚡ - Tensão: ${d('tensao')}\n⚙️ - Serviços: ${d('servicos')}\n\n📊 - Status: ${d('status')}\n`;
+        if(d('status') === 'PARCIAL') relatorio += `🚧 - Pendências: ${d('obsParcial')}\n`;
+        relatorio += `\n🔍 - Arquivos: ${arquivos.length} no ZIP.`;
 
-        // Adiciona o texto ao ZIP (sem os asteriscos de negrito do WhatsApp)
-        zip.file("RELATORIO_DIARIO.txt", relatorio.replace(/\*/g, ''));
-
-        // Adiciona as fotos/vídeos ao ZIP
+        zip.file("RELATORIO.txt", relatorio.replace(/\*/g, ''));
         for (let i = 0; i < arquivos.length; i++) {
-            const ext = arquivos[i].name.split('.').pop();
-            zip.file(`EVIDENCIA_${i+1}.${ext}`, arquivos[i]);
+            zip.file(`FOTO_${i+1}.${arquivos[i].name.split('.').pop()}`, arquivos[i]);
         }
 
-        // Gera o arquivo final
         const content = await zip.generateAsync({type: "blob"});
-        const nomeArquivo = `Relatorio_${d('equipe')}_${d('data')}.zip`;
-        const file = new File([content], nomeArquivo, {type: "application/zip"});
+        const file = new File([content], `Relatorio_${d('equipe')}.zip`, {type: "application/zip"});
 
-        // Tenta usar a API de compartilhamento nativa (abre o WhatsApp direto)
+        // VERIFICAÇÃO DE COMPARTILHAMENTO
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
-                await navigator.share({
-                    files: [file],
-                    title: 'Relatório Diário',
-                    text: relatorio
-                });
+                await navigator.share({ files: [file], title: 'Relatório', text: relatorio });
             } catch (err) {
-                console.error("Erro ao compartilhar:", err);
+                alert("Erro ao enviar. Verifique se o site está em HTTPS.");
             }
         } else {
-            // Fallback: Baixa o arquivo se não for possível compartilhar direto
+            // Se não puder compartilhar (ex: HTTP), ele apenas baixa o arquivo
             const link = document.createElement('a');
             link.href = URL.createObjectURL(content);
-            link.download = nomeArquivo;
+            link.download = `Relatorio_${d('equipe')}.zip`;
             link.click();
-            alert("ZIP gerado com sucesso! Anexe o arquivo baixado manualmente no WhatsApp.");
+            alert("ZIP baixado! Como este site não é HTTPS ou seu celular bloqueou o envio direto, anexe o arquivo no WhatsApp manualmente.");
         }
     }
 
-    // REGISTRO DO SERVICE WORKER (Para funcionamento Offline)
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-        .then(() => console.log("Service Worker ativo!"))
-        .catch(err => console.log("Erro no SW:", err));
+        navigator.serviceWorker.register('sw.js');
     }
 </script>
-
 </body>
 </html>
