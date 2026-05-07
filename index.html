@@ -19,11 +19,16 @@
         label { font-size: 0.8rem; color: #94a3b8; display: block; margin-top: 10px; }
         input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 16px; box-sizing: border-box; }
         
-        /* Estilo especial para o campo de arquivo para parecer um botão */
+        /* Melhoria no campo de arquivo */
+        .file-input-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
         input[type="file"] {
-            padding: 10px;
             background: #1e293b;
-            border: 1px dashed var(--accent);
+            border: 2px dashed var(--accent);
+            padding: 15px;
+            text-align: center;
             cursor: pointer;
         }
 
@@ -77,10 +82,14 @@
 
             <label>Serviços:</label><textarea id="servicos" rows="3"></textarea>
 
-            <!-- CAMPO DE MÍDIA AJUSTADO PARA MOBILE -->
-            <label>Anexar Fotos ou Vídeos:</label>
-            <input type="file" id="midia" multiple accept="image/*,video/*">
-            <small style="font-size: 10px; color: #64748b; display: block; margin-top: 5px;">* Ao clicar, escolha 'Câmera' para tirar foto agora ou 'Arquivos' para galeria.</small>
+            <!-- AQUI ESTÁ O SEGREDO -->
+            <label>Mídia (Foto/Vídeo):</label>
+            <div class="file-input-wrapper">
+                <input type="file" id="midia" multiple accept="image/*,video/*">
+            </div>
+            <p style="font-size: 11px; color: #94a3b8; margin-top: 5px;">
+                💡 Se não abrir a câmera, verifique se o site está usando <b>HTTPS</b> e se as permissões de câmera do navegador estão ativas.
+            </p>
 
             <button class="btn-send" onclick="gerarEEnviar()">🚀 TRANSMITIR PARA WHATSAPP</button>
         </div>
@@ -120,24 +129,28 @@
 
         zip.file("RELATORIO.txt", relatorio.replace(/\*/g, ''));
         for (let i = 0; i < arquivos.length; i++) {
-            zip.file(`FOTO_${i+1}.${arquivos[i].name.split('.').pop()}`, arquivos[i]);
+            const ext = arquivos[i].name.split('.').pop();
+            zip.file(`ANEXO_${i+1}.${ext}`, arquivos[i]);
         }
 
-        const content = await zip.generateAsync({type: "blob"});
-        const file = new File([content], `Relatorio_${d('equipe')}.zip`, {type: "application/zip"});
-
         try {
+            const content = await zip.generateAsync({type: "blob"});
+            const file = new File([content], `Relatorio_${d('equipe')}.zip`, {type: "application/zip"});
+
             if (navigator.share && navigator.canShare({ files: [file] })) {
-                await navigator.share({ files: [file], title: 'Diário', text: relatorio });
+                await navigator.share({ files: [file], title: 'Relatório Diário', text: relatorio });
             } else {
-                throw new Error();
+                throw new Error("Compartilhamento não suportado");
             }
         } catch (err) {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(content);
-            link.download = `Relatorio_${d('equipe')}.zip`;
-            link.click();
-            alert("ZIP baixado! Como o navegador bloqueou o envio direto, anexe o arquivo no WhatsApp manualmente.");
+            alert("Erro ao compartilhar. O arquivo será baixado para você anexar manualmente.");
+            // Backup Download
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = `Relatorio_${d('equipe')}.zip`;
+                link.click();
+            });
         }
     }
 
