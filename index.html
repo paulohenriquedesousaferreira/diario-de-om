@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,200 +9,40 @@
     <meta name="theme-color" content="#0b0f1a">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        :root {
-            --bg: #0b0f1a;
-            --card: #161b2a;
-            --primary: #fbbf24;
-            --secondary: #10b981;
-            --accent: #38bdf8;
-            --text: #e2e8f0;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 10px;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 450px;
-            margin: auto;
-            background: var(--card);
-            border-radius: 20px;
-            border: 1px solid #2d3748;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-        }
-
-        .header {
-            background: #1a202e;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--primary);
-        }
-
-        .header h1 {
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .content {
-            padding: 15px;
-        }
-
-        .section-title {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin: 25px 0 10px 0;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-title::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: rgba(56, 189, 248, 0.2);
-        }
-
-        label {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            display: block;
-            margin-top: 10px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 5px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: var(--accent);
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
+        :root { --bg: #0b0f1a; --card: #161b2a; --primary: #fbbf24; --secondary: #10b981; --accent: #38bdf8; --text: #e2e8f0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 10px; margin: 0; }
+        .container { max-width: 450px; margin: auto; background: var(--card); border-radius: 20px; border: 1px solid #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden; }
+        .header { background: #1a202e; padding: 20px; text-align: center; border-bottom: 3px solid var(--primary); }
+        .header h1 { color: var(--primary); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .content { padding: 15px; }
+        .section-title { font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 25px 0 10px 0; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: rgba(56,189,248,0.2); }
+        label { font-size: 0.8rem; color: #94a3b8; display: block; margin-top: 10px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; font-size: 16px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--accent); }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
         /* Estilo Integrantes conforme imagem */
-        .doc-group {
-            background: rgba(15, 23, 42, 0.4);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-
-        .input-row input {
-            border: 1px solid var(--accent);
-            margin-top: 0;
-        }
-
-        .btn-add {
-            background: transparent;
-            color: var(--accent);
-            border: 1px dashed var(--accent);
-            padding: 12px;
-            border-radius: 10px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .btn-remove {
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            margin-top: 10px;
-        }
-
-        input[type="file"] {
-            background: #1e293b;
-            border: 2px dashed var(--accent);
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .status-box {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
-            border: 1px solid #334155;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .btn-send {
-            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
-            color: white;
-            border: none;
-            padding: 20px;
-            width: 100%;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 800;
-            margin-top: 25px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
+        .doc-group { background: rgba(15, 23, 42, 0.4); padding: 12px; border-radius: 12px; margin-bottom: 8px; border-left: 3px solid var(--accent); }
+        .input-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+        .input-row input { border: 1px solid var(--accent); margin-top: 0; }
+        
+        .btn-add { background: transparent; color: var(--accent); border: 1px dashed var(--accent); padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .btn-remove { background: #ef4444; color: white; border: none; border-radius: 8px; width: 45px; height: 45px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        
+        .file-input-wrapper { position: relative; margin-top: 10px; }
+        input[type="file"] { background: #1e293b; border: 2px dashed var(--accent); padding: 15px; text-align: center; cursor: pointer; }
+        .status-box { background: #1e293b; padding: 15px; border-radius: 12px; margin-top: 15px; border: 1px solid #334155; }
+        .hidden { display: none; }
+        .btn-send { background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%); color: white; border: none; padding: 20px; width: 100%; border-radius: 15px; font-size: 1rem; font-weight: 800; margin-top: 25px; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Diário de Obras e Manutenção</h1>
-        </div>
+        <div class="header"><h1>Diário de Obras e Manutenção</h1></div>
         <div class="content">
-
+            
             <div class="grid-2">
                 <div><label>Cidade:</label><input type="text" id="cidade" value="Águas Lindas"></div>
                 <div><label>Data:</label><input type="date" id="data"></div>
@@ -215,17 +54,10 @@
                     <label>Equipe:</label>
                     <select id="equipe">
                         <option value="">Selecione</option>
-                        <option>AGLO001M</option>
-                        <option>AGLO002M</option>
-                        <option>AGLO003M</option>
-                        <option>AGLO004M</option>
-                        <option>AGLO005M</option>
-                        <option>AGLO006M</option>
-                        <option>AGLV001M</option>
-                        <option>AGLB001M</option>
-                        <option>AGLV002M</option>
-                        <option>AGLV003M</option>
-                        <option>AGLP001M</option>
+                        <option>AGLO001M</option><option>AGLO002M</option><option>AGLO003M</option>
+                        <option>AGLO004M</option><option>AGLO005M</option><option>AGLO006M</option>
+                        <option>AGLV001M</option><option>AGLB001M</option><option>AGLV002M</option>
+                        <option>AGLV003M</option><option>AGLP001M</option>
                     </select>
                 </div>
                 <div><label>Nº Projeto:</label><input type="text" id="projeto" placeholder="0000"></div>
@@ -262,24 +94,12 @@
             </select>
 
             <div class="grid-2">
-                <div class="doc-group" id="group-SI">
-                    <div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-SI', 'SI')">+
-                        SI</button>
-                </div>
-                <div class="doc-group" id="group-PTP">
-                    <div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-PTP', 'PTP')">+
-                        PTP</button>
-                </div>
+                <div class="doc-group" id="group-SI"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-SI', 'SI')">+ SI</button></div>
+                <div class="doc-group" id="group-PTP"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-PTP', 'PTP')">+ PTP</button></div>
             </div>
             <div class="grid-2">
-                <div class="doc-group" id="group-OC">
-                    <div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OC', 'OC')">+
-                        OC</button>
-                </div>
-                <div class="doc-group" id="group-OSE">
-                    <div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OSE', 'OSE')">+
-                        OSE</button>
-                </div>
+                <div class="doc-group" id="group-OC"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OC', 'OC')">+ OC</button></div>
+                <div class="doc-group" id="group-OSE"><div class="container-inputs"></div><button class="btn-add" onclick="addInput('group-OSE', 'OSE')">+ OSE</button></div>
             </div>
             <div class="status-box">
                 <label>Status:</label>
@@ -306,82 +126,44 @@
     </div>
 
     <datalist id="lista-integrantes">
-        <option value="Adriano Vieira Gonçalves">
-        <option value="Alisson Filipe Teixeira Da Silva">
-        <option value="Amilton Jose de Deus">
-        <option value="Andre Luiz Ferreira do Nascimento">
-        <option value="Antonio Araujo Silva">
-        <option value="Antonio Carlos Gomes Moraes">
-        <option value="Antonio Jardson Da Silva Lima">
-        <option value="Bruno Fernandes Martins">
-        <option value="Cirnandes Gonçalves Silva">
-        <option value="Claiton Roberto De Oliveira">
-        <option value="Claudemir Francisco Dos Santos">
-        <option value="Daniel Lima Dos Santos">
-        <option value="David Genesis dos Santos da Silva">
-        <option value="Diego Fernando Dos Santos Gomes">
-        <option value="Diego Worthyton Martins Rosa">
-        <option value="Douglas Luiz Silva De Oliveira">
-        <option value="Eduardo Davi Xavier Dos Santos">
-        <option value="Eliane Nathalia Rodrigues Souto">
-        <option value="Elissandro de Jesus Pereira dos Santos">
-        <option value="Elivan Patricio Sousa">
-        <option value="Erasmo Campos Nogueira">
-        <option value="Eurico Dos Santos Filho Fernandes">
-        <option value="Fernando Alves da Silva">
-        <option value="Francisco Alan da Silva">
-        <option value="Francisco De Assis Silva Junior">
-        <option value="Hailton Sousa Araujo">
-        <option value="Iromar Alves Pinheiro">
-        <option value="Jackson Gabriel Braga">
-        <option value="James Da Cunha Moura">
-        <option value="Janio Almeida Vidal">
-        <option value="Jednelson De Araujo Cunha">
-        <option value="Jenivaldo Gomes De Souza">
-        <option value="Jhonata Lima Morais">
-        <option value="Jilmar Brito Pacheco">
-        <option value="Joao Neto Rocha da Silva">
-        <option value="Joao Paulo Teixeira Narciso">
-        <option value="John Reed da Silva Araujo">
-        <option value="Josafa Lazaro Dos Anjos">
-        <option value="Jose Augusto Fernandes Da Silva">
-        <option value="Jose Carvalho Souza">
-        <option value="Jose Francisco Gomes Correa">
-        <option value="Jose Luiz De Melo Souza">
-        <option value="Jose Luiz Pereira Da Silva">
-        <option value="Jose Silva Rodrigues Santos">
-        <option value="Josuel Afonso Alves">
-        <option value="Joziel Costa De Carvalho">
-        <option value="João Alves Nogueira">
-        <option value="João Batista Rodrigues Da Silva">
-        <option value="Kaio Fernando Da Silva">
-        <option value="Lasaro Dos Santos Souza">
-        <option value="Lazaro Jose Do Carmo Nascimento">
-        <option value="Lucio De Jesus Santana">
-        <option value="Malcione Souza Da Silva">
-        <option value="Marcio Silva De Medeiros Santos">
-        <option value="Marcos Antonio do Nascimento Oliveira">
-        <option value="Marivaldo De Carvalho Santos">
-        <option value="Mateus Felipe Batista Rodrigues">
-        <option value="Matheus Soares De Araujo">
-        <option value="Mauricelio Ferreira De Araujo">
-        <option value="Moises Vanir Leite Da Silva Almeida">
-        <option value="Moures Santana Goncalves De Abreu">
-        <option value="Nataniel Viana da Silva">
-        <option value="Nilton Pereira Dos Santos">
-        <option value="Pedro Furtado Figueiredo Filho">
-        <option value="Pedro Henrique Lopes Da Silva">
-        <option value="Rafael Mascarenhas de Barros">
-        <option value="Rafael de Souza Correa">
-        <option value="Raimundo Martins De Oliveira">
-        <option value="Reinaldo Dias Dos Santos">
-        <option value="Rodrigo Da Silva Alves">
-        <option value="Romario Patricio da Silva">
-        <option value="Uanderson de Jesus Paulo">
-        <option value="Uelson Soares De Brito">
-        <option value="Washington Lopes da Silva">
-        <option value="Weliton Mariano Gomes">
-        <option value="Wilson Espedito dos Santos">
+        <option value="Adriano Vieira Gonçalves"><option value="Alisson Filipe Teixeira Da Silva">
+        <option value="Amilton Jose de Deus"><option value="Andre Luiz Ferreira do Nascimento">
+        <option value="Antonio Araujo Silva"><option value="Antonio Carlos Gomes Moraes">
+        <option value="Antonio Jardson Da Silva Lima"><option value="Bruno Fernandes Martins">
+        <option value="Cirnandes Gonçalves Silva"><option value="Claiton Roberto De Oliveira">
+        <option value="Claudemir Francisco Dos Santos"><option value="Daniel Lima Dos Santos">
+        <option value="David Genesis dos Santos da Silva"><option value="Diego Fernando Dos Santos Gomes">
+        <option value="Diego Worthyton Martins Rosa"><option value="Douglas Luiz Silva De Oliveira">
+        <option value="Eduardo Davi Xavier Dos Santos"><option value="Eliane Nathalia Rodrigues Souto">
+        <option value="Elissandro de Jesus Pereira dos Santos"><option value="Elivan Patricio Sousa">
+        <option value="Erasmo Campos Nogueira"><option value="Eurico Dos Santos Filho Fernandes">
+        <option value="Fernando Alves da Silva"><option value="Francisco Alan da Silva">
+        <option value="Francisco De Assis Silva Junior"><option value="Hailton Sousa Araujo">
+        <option value="Iromar Alves Pinheiro"><option value="Jackson Gabriel Braga">
+        <option value="James Da Cunha Moura"><option value="Janio Almeida Vidal">
+        <option value="Jednelson De Araujo Cunha"><option value="Jenivaldo Gomes De Souza">
+        <option value="Jhonata Lima Morais"><option value="Jilmar Brito Pacheco">
+        <option value="Joao Neto Rocha da Silva"><option value="Joao Paulo Teixeira Narciso">
+        <option value="John Reed da Silva Araujo"><option value="Josafa Lazaro Dos Anjos">
+        <option value="Jose Augusto Fernandes Da Silva"><option value="Jose Carvalho Souza">
+        <option value="Jose Francisco Gomes Correa"><option value="Jose Luiz De Melo Souza">
+        <option value="Jose Luiz Pereira Da Silva"><option value="Jose Silva Rodrigues Santos">
+        <option value="Josuel Afonso Alves"><option value="Joziel Costa De Carvalho">
+        <option value="João Alves Nogueira"><option value="João Batista Rodrigues Da Silva">
+        <option value="Kaio Fernando Da Silva"><option value="Lasaro Dos Santos Souza">
+        <option value="Lazaro Jose Do Carmo Nascimento"><option value="Lucio De Jesus Santana">
+        <option value="Malcione Souza Da Silva"><option value="Marcio Silva De Medeiros Santos">
+        <option value="Marcos Antonio do Nascimento Oliveira"><option value="Marivaldo De Carvalho Santos">
+        <option value="Mateus Felipe Batista Rodrigues"><option value="Matheus Soares De Araujo">
+        <option value="Mauricelio Ferreira De Araujo"><option value="Moises Vanir Leite Da Silva Almeida">
+        <option value="Moures Santana Goncalves De Abreu"><option value="Nataniel Viana da Silva">
+        <option value="Nilton Pereira Dos Santos"><option value="Pedro Furtado Figueiredo Filho">
+        <option value="Pedro Henrique Lopes Da Silva"><option value="Rafael Mascarenhas de Barros">
+        <option value="Rafael de Souza Correa"><option value="Raimundo Martins De Oliveira">
+        <option value="Reinaldo Dias Dos Santos"><option value="Rodrigo Da Silva Alves">
+        <option value="Romario Patricio da Silva"><option value="Uanderson de Jesus Paulo">
+        <option value="Uelson Soares De Brito"><option value="Washington Lopes da Silva">
+        <option value="Weliton Mariano Gomes"><option value="Wilson Espedito dos Santos">
     </datalist>
 
     <script>
@@ -391,10 +173,10 @@
             const container = document.querySelector(`#${groupId} .container-inputs`);
             const div = document.createElement('div');
             div.className = 'input-row';
-
+            
             const listAttr = (label === 'Integrante') ? 'list="lista-integrantes"' : '';
             const placeholder = (label === 'Integrante') ? 'Nº Integrante' : label;
-
+            
             div.innerHTML = `
                 <input type="text" class="doc-input" data-type="${label}" placeholder="${placeholder}" ${listAttr}>
                 <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
@@ -408,62 +190,68 @@
         }
 
         async function gerarEEnviar() {
-            const d = (id) => document.getElementById(id).value;
-            const arquivos = document.getElementById('midia').files;
+    const zip = new JSZip();
+    const d = (id) => document.getElementById(id).value;
+    const arquivos = document.getElementById('midia').files;
 
-            // Validação básica
-            if (!d('equipe') || !d('encarregado')) {
-                alert("Preencha Equipe e Encarregado!");
-                return;
-            }
+    // Validação básica
+    if (!d('equipe') || !d('encarregado')) { 
+        alert("Preencha Equipe e Encarregado!"); 
+        return; 
+    }
 
-            // Coleta dados dos inputs dinâmicos
-            let extras = "";
-            document.querySelectorAll('.doc-input').forEach(i => {
-                if (i.value.trim()) extras += `${i.dataset.type === 'Integrante' ? '👥' : '📄'} - ${i.dataset.type}: ${i.value}\n`;
+    // Coleta dados dos inputs dinâmicos
+    let extras = "";
+    document.querySelectorAll('.doc-input').forEach(i => {
+        if(i.value.trim()) extras += `${i.dataset.type === 'Integrante' ? '👥' : '📄'} - ${i.dataset.type}: ${i.value}\n`;
+    });
+
+    // Monta o texto do relatório (com emojis para o WhatsApp)
+    let relatorio = `📂 *DIÁRIO DE OBRAS*\n\n📍 - Cidade: ${d('cidade')}\n📅 - Data: ${d('data')}\n👷 - Equipe: ${d('equipe')}\n⚒️ - Enc: ${d('encarregado')}\n${extras}\n📁 - Proj: ${d('projeto')}\n⚡ - Tensão: ${d('tensao')}\n⚙️ - Serviços: ${d('servicos')}\n\n📊 - Status: ${d('status')}\n`;
+    
+    if(d('status') === 'PARCIAL') {
+        relatorio += `🚧 - Pendência: ${d('obsParcial')}\n`;
+    }
+
+    // Adiciona o relatório TXT dentro do ZIP (sem os asteriscos do markdown)
+    zip.file("RELATORIO.txt", relatorio.replace(/\*/g, ''));
+
+    // Adiciona as mídias ao ZIP
+    for (let i = 0; i < arquivos.length; i++) {
+        const ext = arquivos[i].name.split('.').pop();
+        zip.file(`ANEXO_${i+1}.${ext}`, arquivos[i]);
+    }
+
+    try {
+        // Gera o conteúdo do ZIP
+        const content = await zip.generateAsync({ type: "blob" });
+        const fileName = `Relatorio_${d('equipe')}_${d('data')}.zip`;
+        const file = new File([content], fileName, { type: "application/zip" });
+
+        // Verifica compatibilidade com a Web Share API
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: 'Relatório Diário - ' + d('equipe'),
+                text: relatorio // O Chrome tentará enviar o texto junto com o arquivo
             });
-
-            // Monta o texto do relatório formatado para WhatsApp
-            let relatorio = `📂 *DIÁRIO DE OBRAS*\n\n`;
-            relatorio += `📍 *Cidade:* ${d('cidade')}\n`;
-            relatorio += `📅 *Data:* ${d('data')}\n`;
-            relatorio += `👷 *Equipe:* ${d('equipe')}\n`;
-            relatorio += `⚒️ *Enc:* ${d('encarregado')}\n`;
-            relatorio += `${extras}`;
-            relatorio += `📁 *Proj:* ${d('projeto')}\n`;
-            relatorio += `⚡ *Tensão:* ${d('tensao')}\n`;
-            relatorio += `⚙️ *Serviços:* ${d('servicos')}\n\n`;
-            relatorio += `📊 *Status:* ${d('status')}\n`;
-
-            if (d('status') === 'PARCIAL') {
-                relatorio += `🚧 *Pendência:* ${d('obsParcial')}\n`;
-            }
-
-            // Se houver fotos, o sistema avisa que elas foram baixadas para anexar
-            if (arquivos.length > 0) {
-                const zip = new JSZip();
-                for (let i = 0; i < arquivos.length; i++) {
-                    const ext = arquivos[i].name.split('.').pop();
-                    zip.file(`ANEXO_${i + 1}.${ext}`, arquivos[i]);
-                }
-
-                const content = await zip.generateAsync({ type: "blob" });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(content);
-                link.download = `Fotos_Relatorio_${d('equipe')}.zip`;
-                link.click();
-
-                relatorio += `\n📎 *Nota:* O arquivo com ${arquivos.length} fotos foi baixado. Anexe-o a seguir.`;
-            }
-
-            // O PULO DO GATO: Abre o WhatsApp com o texto pronto
-            // Isso evita o bloqueio de segurança do Android
-            const urlWhatsapp = `https://api.whatsapp.com/send?text=${encodeURIComponent(relatorio)}`;
-            window.open(urlWhatsapp, '_blank');
+        } else {
+            throw new Error("API de compartilhamento não suportada ou arquivo negado.");
         }
-
+    } catch (err) {
+        console.error("Erro ao compartilhar:", err);
+        // Fallback: Se falhar o compartilhamento, ele faz o download automático
+        zip.generateAsync({ type: "blob" }).then(function(content) {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = `Relatorio_${d('equipe')}.zip`;
+            link.click();
+            alert("O seu navegador não suporta compartilhamento direto. O arquivo ZIP foi baixado.");
+        });
+    }
+}
+        
     </script>
-
+    
 </body>
-
 </html>
