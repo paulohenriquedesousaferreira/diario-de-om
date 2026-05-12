@@ -7,193 +7,10 @@
     <title>Obras e Manutenção</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="ICONE.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
     <meta name="theme-color" content="#0b0f1a">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <style>
-        :root {
-            --bg: #0b0f1a;
-            --card: #161b2a;
-            --primary: #fbbf24;
-            --secondary: #10b981;
-            --accent: #38bdf8;
-            --text: #e2e8f0;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 10px;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 450px;
-            margin: auto;
-            background: var(--card);
-            border-radius: 20px;
-            border: 1px solid #2d3748;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-        }
-
-        .header {
-            background: #1a202e;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--primary);
-        }
-
-        .header h1 {
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .content {
-            padding: 15px;
-        }
-
-        .section-title {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin: 25px 0 10px 0;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-title::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: rgba(56, 189, 248, 0.2);
-        }
-
-        label {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            display: block;
-            margin-top: 10px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 5px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: var(--accent);
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .doc-group {
-            background: rgba(15, 23, 42, 0.4);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-
-        .input-row input {
-            border: 1px solid var(--accent);
-            margin-top: 0;
-        }
-
-        .btn-add {
-            background: transparent;
-            color: var(--accent);
-            border: 1px dashed var(--accent);
-            padding: 12px;
-            border-radius: 10px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .btn-remove {
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            margin-top: 10px;
-        }
-
-        input[type="file"] {
-            background: #1e293b;
-            border: 2px dashed var(--accent);
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .status-box {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
-            border: 1px solid #334155;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .btn-send {
-            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
-            color: white;
-            border: none;
-            padding: 20px;
-            width: 100%;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 800;
-            margin-top: 25px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -246,7 +63,7 @@
                 <option>CLAUDEMIR FRANCISCO DOS SANTOS</option>
                 <option>ANTONIO JARDSON SILVA LIMA</option>
                 <option>SEM2</option>
-            </select>
+            </select><BR><BR>
 
             <label>Integrantes da Equipe:</label>
             <div class="doc-group" id="group-integrantes">
@@ -260,7 +77,10 @@
                 <option>BT</option>
                 <option>13.8KV</option>
                 <option>34.5KV</option>
+                <option>BT - 13.8KV</option>
+                <option>BT - 34.5KV</option>
             </select>
+            <BR><BR>
 
             <div class="grid-2">
                 <div class="doc-group" id="group-SI">
@@ -310,7 +130,7 @@
                 <input type="file" id="midia" multiple accept="image/*,video/*">
             </div>
 
-            <button class="btn-send" onclick="gerarEEnviar()">🚀 TRANSMITIR PARA WHATSAPP</button>
+            <button class="btn-send" onclick="gerarEEnviar()"> 📋 REPORTAR</button>
         </div>
     </div>
 
@@ -393,112 +213,7 @@
         <option value="Wilson Espedito dos Santos">
     </datalist>
 
-    <script>
-        document.getElementById('data').valueAsDate = new Date();
-
-        const dadosEquipes = {
-            "AGLO002M": { encarregado: "JOSE LUIZ DE MELO SOUZA", integrantes: ["Eurico Dos Santos Filho Fernandes", "DIEGO FERNANDO DO SANTOS GOMES", "WILSON ESPEDITO DOS SANTOS", "Rodrigo Da Silva Alves", "CLAITON ROBERTO DE OLIVEIRA", "JACKSON GABRIEL BRAGA"] },
-            "AGLO006M": { encarregado: "MOISES VANIR LEITE DA SILVA", integrantes: ["Amilton Jose de Deus", "James Da Cunha Moura", "Jenivaldo Gomes De Souza", "Adriano Vieira Gonçalves", "Francisco De Assis Silva Junior"] },
-            "AGLO003M": { encarregado: "SEM2", integrantes: ["SEM3", "SEM4", "SEM5", "SEM6", "SEM7"] },
-            "AGLO005M": { encarregado: "LAZARO JOSE DO CARMO NASCIMENTO", integrantes: ["Hailton Sousa Araujo", "Jhonata Lima Morais", "Uelson Soares De Brito", "Lasaro Dos Santos Souza", "Cirnandes Gonçalves Silva", "Romario Patricio da Silva"] },
-            "AGLO001M": { encarregado: "MOURES SANTANA GONÇALVES DE ABREU", integrantes: ["Douglas Luiz Silva De Oliveira", "Lucio De Jesus Santana", "Jednelson De Araujo Cunha", "Bruno Fernandes Martins", "Fernando Alves da Silva"] },
-            "AGLO004M": { encarregado: "JOSE CARVALHO SOUZA", integrantes: ["Jose Augusto Fernandes Da Silva", "Janio Almeida Vidal", "Pedro Henrique Lopes Da Silva", "Erasmo Campos Nogueira", "Marcio Silva De Medeiros Santos"] },
-            "AGLV003M": { encarregado: "JOÃO BATISTA RODRIGUES DA SILVA", integrantes: ["Raimundo Martins De Oliveira", "Eduardo Davi Xavier Dos Santos", "Marivaldo De Carvalho Santos", "Matheus Soares De Araujo"] },
-            "AGLV001M": { encarregado: "JOSUEL AFONSO ALVES", integrantes: ["Diego Worthyton Martins Rosa", "JOZIEL COSTA DE CARVALHO", "Antonio Carlos Gomes Moraes", "David Genesis dos Santos da Silva"] },
-            "AGLV002M": { encarregado: "JOÃO ALVES NOGUEIRA", integrantes: ["Uanderson de Jesus Paulo", "Malcione Souza Da Silva"] },
-            "AGLP001M": { encarregado: "ELIAVAM PATRICIO", integrantes: ["Mauricelio Ferreira De Araujo", "Washington Lopes da Silva"] },
-            "AGLB001M": { encarregado: "ANTONIO JARDSON DA SILVA LIMA", integrantes: ["Pedro Furtado Figueiredo Filho", "SEM1"] }
-        };
-
-        function preencherEquipe() {
-            const equipeSel = document.getElementById('equipe').value;
-            const container = document.querySelector(`#group-integrantes .container-inputs`);
-            container.innerHTML = ""; // Limpa os atuais
-
-            if (dadosEquipes[equipeSel]) {
-                const dados = dadosEquipes[equipeSel];
-                // Preenche encarregado
-                document.getElementById('encarregado').value = dados.encarregado;
-                // Preenche integrantes
-                dados.integrantes.forEach(nome => {
-                    addInput('group-integrantes', 'Integrante', nome);
-                });
-            }
-        }
-
-        function addInput(groupId, label, value = "") {
-            const container = document.querySelector(`#${groupId} .container-inputs`);
-            const div = document.createElement('div');
-            div.className = 'input-row';
-
-            const listAttr = (label === 'Integrante') ? 'list="lista-integrantes"' : '';
-            const placeholder = (label === 'Integrante') ? 'Nome' : label;
-
-            div.innerHTML = `
-                <input type="text" class="doc-input" data-type="${label}" placeholder="${placeholder}" value="${value}" ${listAttr}>
-                <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-            `;
-            container.appendChild(div);
-        }
-
-        function toggleParcial() {
-            const status = document.getElementById('status').value;
-            document.getElementById('descParcial').className = status === 'PARCIAL' ? '' : 'hidden';
-        }
-
-        async function gerarEEnviar() {
-            const zip = new JSZip();
-            const d = (id) => document.getElementById(id).value;
-            const arquivos = document.getElementById('midia').files;
-
-            if (!d('equipe') || !d('encarregado')) {
-                alert("Preencha Equipe e Encarregado!");
-                return;
-            }
-
-            let extras = "";
-            document.querySelectorAll('.doc-input').forEach(i => {
-                if (i.value.trim()) extras += `${i.dataset.type === 'Integrante' ? '👥' : '📄'} - ${i.dataset.type}: ${i.value}\n`;
-            });
-
-            let relatorio = `📂 *DIÁRIO DE OBRAS*\n\n📍 - Cidade: ${d('cidade')}\n📅 - Data: ${d('data')}\n👷 - Equipe: ${d('equipe')}\n⚒️ - Enc: ${d('encarregado')}\n${extras}\n📁 - Proj: ${d('projeto')}\n⚡ - Tensão: ${d('tensao')}\n⚙️ - Serviços: ${d('servicos')}\n\n📝 - Obs: ${d('obsFinal')}\n\n📊 - Status: ${d('status')}\n`;
-
-            if (d('status') === 'PARCIAL') {
-                relatorio += `🚧 - Pendência: ${d('obsParcial')}\n`;
-            }
-
-            zip.file("RELATORIO.txt", relatorio.replace(/\*/g, ''));
-
-            for (let i = 0; i < arquivos.length; i++) {
-                const ext = arquivos[i].name.split('.').pop();
-                zip.file(`ANEXO_${i + 1}.${ext}`, arquivos[i]);
-            }
-
-            try {
-                const content = await zip.generateAsync({ type: "blob" });
-                const fileName = `Relatorio_${d('equipe')}_${d('data')}.zip`;
-                const file = new File([content], fileName, { type: "application/zip" });
-
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'Relatório Diário - ' + d('equipe'),
-                        text: relatorio
-                    });
-                } else {
-                    throw new Error("API de compartilhamento não suportada.");
-                }
-            } catch (err) {
-                zip.generateAsync({ type: "blob" }).then(function (content) {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(content);
-                    link.download = `Relatorio_${d('equipe')}.zip`;
-                    link.click();
-                    alert("ZIP baixado automaticamente. Envie manualmente para o WhatsApp.");
-                });
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>

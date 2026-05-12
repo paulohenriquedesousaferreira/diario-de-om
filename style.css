@@ -1,0 +1,183 @@
+:root {
+            --bg: #0b0f1a;
+            --card: #161b2a;
+            --primary: #fbbf24;
+            --secondary: #10b981;
+            --accent: #38bdf8;
+            --text: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 10px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px solid #2d3748;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1a202e;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .content {
+            padding: 15px;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin: 25px 0 10px 0;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .doc-group {
+            background: rgba(15, 23, 42, 0.4);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .input-row input {
+            border: 1px solid var(--accent);
+            margin-top: 0;
+        }
+
+        .btn-add {
+            background: transparent;
+            color: var(--accent);
+            border: 1px dashed var(--accent);
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-remove {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            background: #1e293b;
+            border: 2px dashed var(--accent);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .status-box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid #334155;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            width: 100%;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 800;
+            margin-top: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
