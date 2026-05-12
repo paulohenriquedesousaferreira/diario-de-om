@@ -54,9 +54,9 @@ function toggleParcial() {
 async function gerarEEnviar() {
     const zip = new JSZip();
     
-    // Captura dos dados
+    // Captura os dados do HTML
     const cidade = document.getElementById('cidade').value;
-    const dataCampo = document.getElementById('data').value; // Formato padrão: YYYY-MM-DD
+    const dataCampo = document.getElementById('data').value; // YYYY-MM-DD
     const equipe = document.getElementById('equipe').value;
     const encarregado = document.getElementById('encarregado').value;
     const projeto = document.getElementById('projeto').value;
@@ -65,14 +65,14 @@ async function gerarEEnviar() {
     const servicos = document.getElementById('servicos').value;
     const obsFinal = document.getElementById('obsFinal').value;
 
-    // --- FORMATAÇÃO DA DATA PARA O NOME DO ARQUIVO ---
-    let dataFormatada = "";
+    // --- FORMATAÇÃO DA DATA PARA O NOME DO ARQUIVO (DD_MM_AAAA) ---
+    let dataParaNome = "";
     if (dataCampo) {
         const [ano, mes, dia] = dataCampo.split('-');
-        dataFormatada = `${dia}_${mes}_${ano}`; // Ex: 12_05_2026
+        dataParaNome = `${dia}_${mes}_${ano}`;
     } else {
         const d = new Date();
-        dataFormatada = `${d.getDate()}_${d.getMonth() + 1}_${d.getFullYear()}`;
+        dataParaNome = `${d.getDate()}_${d.getMonth() + 1}_${d.getFullYear()}`;
     }
 
     // Coleta integrantes
@@ -81,9 +81,10 @@ async function gerarEEnviar() {
                              .filter(v => v !== "")
                              .join('\n👥 - Integrante: ');
     
+    // Montagem do Texto Formatado
     const textoDiario = `📂 *DIÁRIO DE OBRAS*\n\n` +
                         `📍 - Cidade: ${cidade}\n` +
-                        `📅 - Data: ${dataFormatada.replace(/_/g, '/')}\n` + // Volta para / no texto
+                        `📅 - Data: ${dataParaNome.replace(/_/g, '/')}\n` +
                         `👷 - Equipe: ${equipe}\n` +
                         `⚒️ - Enc: ${encarregado}\n` +
                         `👥 - Integrante: ${integrantes}\n\n` +
@@ -92,6 +93,9 @@ async function gerarEEnviar() {
                         `📝 - Status: ${status}\n` +
                         `⚙️ - Serviços: ${servicos}\n` +
                         `📌 - Obs: ${obsFinal}`;
+
+    // 1. ADICIONA O TEXTO DENTRO DA PASTA ZIP
+    zip.file("Diario_de_Obras.txt", textoDiario);
 
     // Adiciona as mídias ao ZIP
     const midiaInput = document.getElementById('midia');
@@ -104,15 +108,23 @@ async function gerarEEnviar() {
 
     const content = await zip.generateAsync({ type: "blob" });
     
-    // Passa a data formatada para o nome do arquivo
-    const nomeArquivo = `Relatorio_${equipe} ${dataFormatada}`;
-    executarFallback(content, nomeArquivo, textoDiario);
+    // 2. DEFINE O NOME DA PASTA COM A DATA NO FINAL
+    const nomeCompleto = `Relatorio_${equipe}_${dataParaNome}`;
+    
+    executarFallback(content, nomeCompleto, textoDiario);
 }
 
-async function executarFallback(blob, nomeCompleto, texto) {
-    const arquivo = new File([blob], `${nomeCompleto}.zip`, { type: "application/zip" });
+async function executarFallback(blob, nomeArquivo, texto) {
+    const arquivo = new File([blob], `${nomeArquivo}.zip`, { type: "application/zip" });
 
-    // Tenta abrir a gaveta de compartilhamento (Celular)
+    // Copia o texto para o clipboard (CTRL+V)
+    try {
+        await navigator.clipboard.writeText(texto);
+    } catch (e) {
+        console.log("Erro ao copiar texto");
+    }
+
+    // Tenta abrir a gaveta de compartilhamento do Celular
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
         try {
             await navigator.share({
@@ -120,19 +132,17 @@ async function executarFallback(blob, nomeCompleto, texto) {
                 text: texto,
                 files: [arquivo]
             });
-            return;
+            return; 
         } catch (err) {
-            console.log("Share falhou");
+            console.log("Compartilhamento nativo cancelado.");
         }
     }
 
-    // Plano B (Chrome PC)
-    await navigator.clipboard.writeText(texto);
-
+    // Plano B para Chrome PC: Faz o download e avisa
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${nomeCompleto}.zip`; // Nome com equipe e data
+    link.download = `${nomeArquivo}.zip`;
     link.click();
 
-    alert("✅ REPORTE GERADO!\n\nArquivo: " + nomeCompleto + ".zip\nO texto foi copiado para o seu CTRL+V.");
+    alert("✅ REPORTE GERADO!\n\n1. Pasta ZIP criada com o TXT dentro.\n2. Nome: " + nomeArquivo + ".zip\n3. Texto copiado para o WhatsApp.");
 }
