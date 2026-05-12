@@ -136,4 +136,41 @@ function fazerDownloadManual(blob, nomeEquipe) {
     link.download = `Relatorio_${nomeEquipe}.zip`;
     link.click();
     URL.revokeObjectURL(link.href);
+async function executarFallback(blob, nomeEquipe, texto) {
+    const arquivo = new File([blob], `Relatorio_${nomeEquipe}.zip`, { type: "application/zip" });
+
+    // 1. TENTA O COMPARTILHAMENTO NATIVO (Funciona em Celular/iOS)
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+        try {
+            await navigator.share({
+                files: [arquivo],
+                title: 'Diário de Obras',
+                text: texto 
+            });
+            return; // Se funcionou, para por aqui.
+        } catch (err) {
+            console.log("Compartilhamento cancelado ou falhou.");
+        }
+    }
+
+    // 2. SE FOR NO CHROME PC (Ou se o share falhar no celular)
+    // NÃO abre o site do WhatsApp. Apenas baixa e copia.
+    
+    // Copia o texto para o seu CTRL+V
+    try {
+        await navigator.clipboard.writeText(texto);
+    } catch (e) {
+        console.log("Erro ao copiar");
+    }
+
+    // Baixa o arquivo ZIP
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Relatorio_${nomeEquipe}.zip`;
+    document.body.appendChild(link); // Necessário para alguns navegadores
+    link.click();
+    document.body.removeChild(link);
+
+    // Alerta curto e direto para não atrapalhar
+    alert("✅ ZIP Baixado!\n✅ Texto Copiado!\n\nAgora é só colar no WhatsApp.");
 }
