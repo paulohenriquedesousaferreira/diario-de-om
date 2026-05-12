@@ -54,9 +54,9 @@ function toggleParcial() {
 async function gerarEEnviar() {
     const zip = new JSZip();
     
-    // Captura dos dados (Certifique-se que os IDs batem com seu HTML)
+    // Captura dos dados
     const cidade = document.getElementById('cidade').value;
-    const data = document.getElementById('data').value;
+    const dataCampo = document.getElementById('data').value; // Formato padrão: YYYY-MM-DD
     const equipe = document.getElementById('equipe').value;
     const encarregado = document.getElementById('encarregado').value;
     const projeto = document.getElementById('projeto').value;
@@ -65,16 +65,25 @@ async function gerarEEnviar() {
     const servicos = document.getElementById('servicos').value;
     const obsFinal = document.getElementById('obsFinal').value;
 
-    // Coleta integrantes (Pega todos os inputs dentro do grupo de integrantes)
+    // --- FORMATAÇÃO DA DATA PARA O NOME DO ARQUIVO ---
+    let dataFormatada = "";
+    if (dataCampo) {
+        const [ano, mes, dia] = dataCampo.split('-');
+        dataFormatada = `${dia}_${mes}_${ano}`; // Ex: 12_05_2026
+    } else {
+        const d = new Date();
+        dataFormatada = `${d.getDate()}_${d.getMonth() + 1}_${d.getFullYear()}`;
+    }
+
+    // Coleta integrantes
     const integrantes = Array.from(document.querySelectorAll('#group-integrantes input'))
                              .map(i => i.value)
-                             .filter(v => v !== "") // Remove campos vazios
+                             .filter(v => v !== "")
                              .join('\n👥 - Integrante: ');
     
-    // Montagem do Texto do Diário (Igual ao que você mandou na foto)
     const textoDiario = `📂 *DIÁRIO DE OBRAS*\n\n` +
                         `📍 - Cidade: ${cidade}\n` +
-                        `📅 - Data: ${data}\n` +
+                        `📅 - Data: ${dataFormatada.replace(/_/g, '/')}\n` + // Volta para / no texto
                         `👷 - Equipe: ${equipe}\n` +
                         `⚒️ - Enc: ${encarregado}\n` +
                         `👥 - Integrante: ${integrantes}\n\n` +
@@ -95,50 +104,35 @@ async function gerarEEnviar() {
 
     const content = await zip.generateAsync({ type: "blob" });
     
-    // Chama a lógica de compartilhamento ou download
-    executarFallback(content, equipe, textoDiario);
+    // Passa a data formatada para o nome do arquivo
+    const nomeArquivo = `Relatorio_${equipe} ${dataFormatada}`;
+    executarFallback(content, nomeArquivo, textoDiario);
 }
 
-async function executarFallback(blob, nomeEquipe, texto) {
-    const arquivo = new File([blob], `Relatorio_${nomeEquipe}.zip`, { type: "application/zip" });
+async function executarFallback(blob, nomeCompleto, texto) {
+    const arquivo = new File([blob], `${nomeCompleto}.zip`, { type: "application/zip" });
 
-    // 1. TENTA ABRIR A OPÇÃO DE COMPARTILHAMENTO (GAVETA DO CELULAR)
-    if (navigator.share) {
+    // Tenta abrir a gaveta de compartilhamento (Celular)
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
         try {
             await navigator.share({
                 title: 'Diário de Obras',
-                text: texto,    // O texto vira a legenda
-                files: [arquivo] // O arquivo ZIP vai junto
+                text: texto,
+                files: [arquivo]
             });
-            // Se o usuário enviou com sucesso, não faz mais nada
-            return; 
+            return;
         } catch (err) {
-            // Se der erro ou o usuário cancelar, ele tenta o plano B abaixo
-            console.log("Compartilhamento não concluído:", err);
+            console.log("Share falhou");
         }
     }
 
-    // 2. PLANO B (PARA CHROME NO PC OU SE O SHARE FALHAR)
-    // Se chegou aqui, é porque o navegador não tem a "gaveta" de compartilhar
-    
-    // Copia o texto para o seu CTRL+V
+    // Plano B (Chrome PC)
     await navigator.clipboard.writeText(texto);
 
-    // Baixa o ZIP
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `Relatorio_${nomeEquipe}.zip`;
+    link.download = `${nomeCompleto}.zip`; // Nome com equipe e data
     link.click();
 
-    // Mensagem de sucesso
-    alert("✅ REPORTE GERADO!\n\nComo este navegador não suporta compartilhamento direto:\n1. O ZIP foi baixado.\n2. O texto foi copiado.\n\nBasta colar no WhatsApp!");
-}
-
-// 3. FUNÇÃO DE DOWNLOAD (A que faz o arquivo descer no navegador)
-function fazerDownloadManual(blob, nomeEquipe) {
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `Relatorio_${nomeEquipe}.zip`;
-    link.click();
-    URL.revokeObjectURL(link.href);
+    alert("✅ REPORTE GERADO!\n\nArquivo: " + nomeCompleto + ".zip\nO texto foi copiado para o seu CTRL+V.");
 }
