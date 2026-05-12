@@ -100,42 +100,38 @@ async function gerarEEnviar() {
 }
 
 async function executarFallback(blob, nomeEquipe, texto) {
-    // 1. Tenta o compartilhamento nativo (Gaveta de contatos do Celular)
     const arquivo = new File([blob], `Relatorio_${nomeEquipe}.zip`, { type: "application/zip" });
-    
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+
+    // 1. TENTA ABRIR A OPÇÃO DE COMPARTILHAMENTO (GAVETA DO CELULAR)
+    if (navigator.share) {
         try {
             await navigator.share({
-                files: [arquivo],
                 title: 'Diário de Obras',
-                text: texto 
+                text: texto,    // O texto vira a legenda
+                files: [arquivo] // O arquivo ZIP vai junto
             });
-            return; // Se o celular abriu os contatos, encerra aqui
+            // Se o usuário enviou com sucesso, não faz mais nada
+            return; 
         } catch (err) {
-            console.log("Compartilhamento nativo ignorado ou falhou.");
+            // Se der erro ou o usuário cancelar, ele tenta o plano B abaixo
+            console.log("Compartilhamento não concluído:", err);
         }
     }
 
-    // 2. Se for no Chrome do PC (Download + Cópia)
+    // 2. PLANO B (PARA CHROME NO PC OU SE O SHARE FALHAR)
+    // Se chegou aqui, é porque o navegador não tem a "gaveta" de compartilhar
     
-    // Copia o texto do Diário para o seu CTRL+V automaticamente
-    try {
-        await navigator.clipboard.writeText(texto);
-    } catch (e) {
-        console.log("Não foi possível copiar o texto automaticamente.");
-    }
+    // Copia o texto para o seu CTRL+V
+    await navigator.clipboard.writeText(texto);
 
-    // Faz o download do arquivo ZIP
+    // Baixa o ZIP
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `Relatorio_${nomeEquipe}.zip`;
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
 
-    // Aviso de sucesso final (Sem abrir sites)
-    alert("✅ REPORTE GERADO COM SUCESSO!\n\n1. O arquivo ZIP foi baixado.\n2. O texto do Diário já está copiado.\n\nBasta colar no WhatsApp.");
+    // Mensagem de sucesso
+    alert("✅ REPORTE GERADO!\n\nComo este navegador não suporta compartilhamento direto:\n1. O ZIP foi baixado.\n2. O texto foi copiado.\n\nBasta colar no WhatsApp!");
 }
 
 // 3. FUNÇÃO DE DOWNLOAD (A que faz o arquivo descer no navegador)
