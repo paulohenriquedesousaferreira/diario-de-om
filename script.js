@@ -50,10 +50,11 @@ function toggleParcial() {
     document.getElementById('descParcial').className = status === 'PARCIAL' ? '' : 'hidden';
 }
 
+// 1. FUNÇÃO PRINCIPAL (Acionada pelo botão REPORTAR)
 async function gerarEEnviar() {
     const zip = new JSZip();
-
-    // Captura os dados dos campos
+    
+    // Captura dos dados (Certifique-se que os IDs batem com seu HTML)
     const cidade = document.getElementById('cidade').value;
     const data = document.getElementById('data').value;
     const equipe = document.getElementById('equipe').value;
@@ -64,26 +65,26 @@ async function gerarEEnviar() {
     const servicos = document.getElementById('servicos').value;
     const obsFinal = document.getElementById('obsFinal').value;
 
-    // Coleta integrantes e documentos (ajuste conforme sua lógica de addInput)
-    const integrantes = Array.from(document.querySelectorAll('#group-integrantes input')).map(i => i.value).join('\n👥 - Integrante: ');
-
-    // Montagem do Texto Formatado para o WhatsApp
+    // Coleta integrantes (Pega todos os inputs dentro do grupo de integrantes)
+    const integrantes = Array.from(document.querySelectorAll('#group-integrantes input'))
+                             .map(i => i.value)
+                             .filter(v => v !== "") // Remove campos vazios
+                             .join('\n👥 - Integrante: ');
+    
+    // Montagem do Texto do Diário (Igual ao que você mandou na foto)
     const textoDiario = `📂 *DIÁRIO DE OBRAS*\n\n` +
-        `📍 - Cidade: ${cidade}\n` +
-        `📅 - Data: ${data}\n` +
-        `👷 - Equipe: ${equipe}\n` +
-        `⚒️ - Enc: ${encarregado}\n` +
-        `👥 - Integrante: ${integrantes}\n\n` +
-        `🏗️ - Proj: ${projeto}\n` +
-        `⚡ - Tensão: ${tensao}\n` +
-        `📝 - Status: ${status}\n` +
-        `⚙️ - Serviços: ${servicos}\n` +
-        `📌 - Obs: ${obsFinal}`;
+                        `📍 - Cidade: ${cidade}\n` +
+                        `📅 - Data: ${data}\n` +
+                        `👷 - Equipe: ${equipe}\n` +
+                        `⚒️ - Enc: ${encarregado}\n` +
+                        `👥 - Integrante: ${integrantes}\n\n` +
+                        `🏗️ - Proj: ${projeto}\n` +
+                        `⚡ - Tensão: ${tensao}\n` +
+                        `📝 - Status: ${status}\n` +
+                        `⚙️ - Serviços: ${servicos}\n` +
+                        `📌 - Obs: ${obsFinal}`;
 
-    // Adiciona o texto como um arquivo TXT dentro do ZIP também (por segurança)
-    zip.file("Diario_de_Obras.txt", textoDiario);
-
-    // Adiciona as mídias selecionadas ao ZIP
+    // Adiciona as mídias ao ZIP
     const midiaInput = document.getElementById('midia');
     if (midiaInput.files.length > 0) {
         for (let i = 0; i < midiaInput.files.length; i++) {
@@ -93,40 +94,46 @@ async function gerarEEnviar() {
     }
 
     const content = await zip.generateAsync({ type: "blob" });
-    const fileZip = new File([content], `Relatorio_${equipe}.zip`, { type: "application/zip" });
+    
+    // Chama a lógica de compartilhamento ou download
+    executarFallback(content, equipe, textoDiario);
+}
 
-    // --- LÓGICA DE ENVIO / PLANO B ---
+// 2. FUNÇÃO DE APOIO (Lida com Celular vs PC)
+async function executarFallback(blob, nomeEquipe, texto) {
+    const arquivo = new File([blob], `Relatorio_${nomeEquipe}.zip`, { type: "application/zip" });
 
-    if (navigator.canShare && navigator.canShare({ files: [fileZip] })) {
-        // TENTA ENVIAR TUDO JUNTO (IOS / ANDROID)
+    // Copia o texto para o CTRL+V logo de cara (Garante que você tenha o texto)
+    try {
+        await navigator.clipboard.writeText(texto);
+    } catch (e) {
+        console.log("Erro ao copiar texto");
+    }
+
+    // Se for CELULAR (Android/iOS) com suporte a compartilhamento
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
         try {
             await navigator.share({
-                files: [fileZip],
+                files: [arquivo],
                 title: 'Diário de Obras',
-                text: textoDiario
+                text: texto // Tenta enviar o texto junto
             });
         } catch (err) {
-            executarFallback(content, equipe, textoDiario);
+            // Se o usuário cancelar o compartilhamento, ele apenas baixa o arquivo
+            fazerDownloadManual(blob, nomeEquipe);
         }
     } else {
-        // EXECUTA O PLANO B (CHROME PC)
-        executarFallback(content, equipe, textoDiario);
+        // Se for PC (Chrome) ou navegador sem suporte
+        fazerDownloadManual(blob, nomeEquipe);
+        alert("RELATÓRIO GERADO!\n\n1. O ZIP foi baixado.\n2. O texto foi COPIADO.\n\nNo WhatsApp, anexe o arquivo e cole (CTRL+V) a legenda.");
     }
 }
 
-// Função auxiliar para o Chrome (Download + Copiar Texto)
-function executarFallback(blob, nomeEquipe, texto) {
-    // 1. Baixa o ZIP
+// 3. FUNÇÃO DE DOWNLOAD (A que faz o arquivo descer no navegador)
+function fazerDownloadManual(blob, nomeEquipe) {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `Reporte_${nomeEquipe} ${new Date().toISOString().split('T')[0]}.zip`;
+    link.download = `Relatorio_${nomeEquipe}.zip`;
     link.click();
-
-    // 2. Copia o texto para o CTRL+V
-    navigator.clipboard.writeText(texto).then(() => {
-        alert("CHROME DETECTADO:\n1. O ZIP foi baixado.\n2. O texto do Diário foi COPIADO!\n\nAgora arraste o ZIP para o WhatsApp e dê CTRL+V na legenda.");
-
-        // 3. Abre o WhatsApp Web (opcional, para agilizar)
-        window.open('https://web.whatsapp.com', '_blank');
-    });
+    URL.revokeObjectURL(link.href);
 }
